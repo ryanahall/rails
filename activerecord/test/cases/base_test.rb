@@ -1266,16 +1266,6 @@ class BasicsTest < ActiveRecord::TestCase
     assert_equal c1, c2
   end
 
-  def test_current_scope_is_reset
-    Object.const_set(:UnloadablePost, Class.new(ActiveRecord::Base))
-    UnloadablePost.current_scope = UnloadablePost.all
-
-    klass = UnloadablePost
-    assert_not_nil ActiveRecord::Scoping::ScopeRegistry.current_scope(klass)
-    Object.class_eval { remove_const :UnloadablePost }
-    assert_nil ActiveRecord::Scoping::ScopeRegistry.current_scope(klass)
-  end
-
   def test_marshal_round_trip
     expected = posts(:welcome)
     marshalled = Marshal.dump(expected)

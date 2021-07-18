@@ -551,8 +551,7 @@ module ActiveSupport #:nodoc:
     end
 
     # Remove the constants that have been autoloaded, and those that have been
-    # marked for unloading. Before each constant is removed a callback is sent
-    # to its class/module if it implements +before_remove_const+.
+    # marked for unloading.
     #
     # The callback implementation should be restricted to cleaning up caches, etc.
     # as the environment will be in an inconsistent state, e.g. other constants
@@ -688,12 +687,9 @@ module ActiveSupport #:nodoc:
       # example above with Object, accessing to that constant must err.
       unless parent.autoload?(to_remove)
         begin
-          constantized = parent.const_get(to_remove, false)
+          parent.const_get(to_remove, false)
         rescue NameError
           # The constant is no longer reachable, just skip it.
-          return
-        else
-          constantized.before_remove_const if constantized.respond_to?(:before_remove_const)
         end
       end
 
